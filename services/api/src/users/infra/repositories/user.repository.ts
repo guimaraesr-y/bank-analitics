@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User as UserEntity } from '../entities/user.entity';
+import { User, User as UserEntity } from '../entities/user.entity';
 import { UserInterface } from 'src/users/domain/entities/user';
 import { UserRepositoryInterface } from 'src/users/domain/repositories/users.repository';
 
@@ -18,13 +18,13 @@ export class UserRepository implements UserRepositoryInterface {
     return user ? user : null;
   }
 
-  async createUser(user: Partial<UserInterface>): Promise<UserInterface> {
+  async createUser(user: Partial<UserInterface>): Promise<User> {
     const entity = this.repository.create(user);
     const savedEntity = await this.repository.save(entity);
     return savedEntity;
   }
 
-  async updateUser(id: string, updateData: Partial<UserInterface>): Promise<UserInterface> {
+  async updateUser(id: string, updateData: Partial<UserInterface>): Promise<User> {
     const entity = await this.repository.preload(updateData);
     if (!entity) {
       throw new Error(`User ${id} not found`);

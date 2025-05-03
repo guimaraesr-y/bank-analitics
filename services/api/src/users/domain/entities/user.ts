@@ -5,6 +5,20 @@ export interface BaseUserInterface {
     lastName: string;
 }
 
+export interface BasicUserResponseInterface {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+}
+
+export interface BasicUserResponse {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+}
+
 export interface UserInterface extends BaseUserInterface {
     id: string;
 }

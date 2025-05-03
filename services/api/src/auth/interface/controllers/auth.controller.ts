@@ -3,11 +3,13 @@ import { SignInDto } from '../serializers/signin.dto';
 import { SignInResponse } from '../serializers/signin.response';
 import { SignUpResponse } from '../serializers/signup.response';
 import { SignUpDto } from '../serializers/signup.dto';
+import { AuthService } from 'src/auth/domain/services/auth.service';
+import { BasicUserResponse } from 'src/users/interface/serializers/basic-user.response';
 
 @Controller('auth')
 export class AuthController {
 
-    constructor() {}
+    constructor(private authService: AuthService) {}
 
     @Get()
     getCurrentUser(): string {
@@ -15,15 +17,22 @@ export class AuthController {
     }
 
     @Post('/signin')
-    signIn(@Body() signInDto: SignInDto): Promise<SignInResponse> {
-        // TODO: Return a JWT
-        return Promise.resolve({ accessToken: '123' });
+    async signIn(@Body() signInDto: SignInDto): Promise<SignInResponse> {
+        const token = await this.authService.signIn(signInDto.email, signInDto.password);
+        return Promise.resolve({ accessToken: token });
     }
 
     @Post('/signup')
-    signUp(@Body() signInDto: SignUpDto): Promise<SignUpResponse> {
-        // TODO: Return a JWT with the user data
-        return Promise.resolve({ accessToken: '123' } as SignUpResponse);
+    async signUp(@Body() signUpDto: SignUpDto): Promise<SignUpResponse> {
+        const user = await this.authService.signUp(signUpDto);
+        console.log(signUpDto, user);
+        const token = await this.authService.signIn(signUpDto.email, signUpDto.password);
+        const filteredUser = new BasicUserResponse(user);
+
+        return Promise.resolve({ 
+            ...filteredUser,
+            accessToken: token 
+        });
     }
 
 }
