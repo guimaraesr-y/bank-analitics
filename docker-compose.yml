@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:14
+    env_file:
+      - ./env/postgres.env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    env_file:
+      - ./env/rabbitmq.env
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmqdata:/var/lib/rabbitmq
+
+  redis:
+    image: redis:6
+    ports:
+      - "6379:6379"
+
+  api:
+    build:
+      context: ./src/services/api
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+      - rabbitmq
+      - redis
+    env_file:
+      - ./env/api.env
+    ports:
+      - "3000:3000"
+
+  parser_worker:
+    build:
+      context: ./src/workers/parser
+      dockerfile: Dockerfile
+    depends_on:
+      - rabbitmq
+    env_file:
+      - ./env/parser.env
+
+volumes:
+  pgdata:
+  rabbitmqdata:
