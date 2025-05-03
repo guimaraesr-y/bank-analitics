@@ -6,12 +6,12 @@ export interface BaseUserInterface {
 }
 
 export interface UserInterface extends BaseUserInterface {
-    id: number;
+    id: string;
 }
 
 export class User implements UserInterface {
     
-    id: number;
+    id: string;
     email: string;
     password: string;
     firstName: string;

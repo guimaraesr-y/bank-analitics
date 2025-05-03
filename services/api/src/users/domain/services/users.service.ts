@@ -1,13 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { User } from "src/users/domain/entities/user";
+import { UserRepository } from 'src/users/infra/repositories/user.repository';
+import { User } from '../entities/user';
 
 @Injectable()
 export class UsersService {
 
-    constructor() {}
+    constructor(private userRepository: UserRepository) {}
 
     async findByEmail(email: string) {
-        return new User();
+        return this.userRepository.findByEmail(email);
+    }
+
+    async createUser(user: Partial<User>) {
+        return this.userRepository.createUser(user);
     }
 
 }
