@@ -18,6 +18,10 @@ export class AuthService {
         private jwtService: JwtService,
     ) {}
 
+    async getUser(id: string): Promise<User | null> {
+        return this.usersService.findById(id);
+    }
+
     async signIn(email: string, password: string): Promise<string> {
         const user = await this.usersService.findByEmail(email);
 
