@@ -13,6 +13,10 @@ export class UsersService {
         private cryptoService: CryptoService,
     ) {}
 
+    async findById(id: string) {
+        return this.userRepository.findById(id);
+    }
+
     async findByEmail(email: string) {
         return this.userRepository.findByEmail(email);
     }

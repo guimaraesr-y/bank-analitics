@@ -13,7 +13,12 @@ export class UserRepository implements UserRepositoryInterface {
     private readonly repository: Repository<UserEntity>,
   ) {}
 
-  async findByEmail(email: string): Promise<UserInterface | null> {
+  async findById(id: string): Promise<User | null> {
+    const user = await this.repository.findOneBy({ id });
+    return user ? user : null;
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
     const user = await this.repository.findOneBy({ email });
     return user ? user : null;
   }
