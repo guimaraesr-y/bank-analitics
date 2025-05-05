@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CryptoModule } from './crypto/crypto.module';
+import { BrokerModule } from './broker/broker.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { CryptoModule } from './crypto/crypto.module';
       }),
     }),
     CryptoModule,
+    BrokerModule,
   ], // TypeOrmModule.forFeature([User]),
   controllers: [AppController],
   providers: [AppService],

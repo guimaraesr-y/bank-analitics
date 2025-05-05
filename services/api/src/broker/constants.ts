@@ -1,0 +1,1 @@
+export const STATEMENTS_PARSER_QUEUE_NAME = 'statements';
