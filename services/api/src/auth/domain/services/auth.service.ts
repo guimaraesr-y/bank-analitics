@@ -16,7 +16,7 @@ export class AuthService {
         
         @Inject('JwtService')
         private jwtService: JwtService,
-    ) {}
+    ) { }
 
     async getUser(id: string): Promise<User | null> {
         return this.usersService.findById(id);
