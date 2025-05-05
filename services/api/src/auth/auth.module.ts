@@ -12,5 +12,6 @@ import { BrokerModule } from 'src/broker/broker.module';
   ],
   controllers: [AuthController],
   providers: [AuthService],
+  exports: [AuthService],
 })
 export class AuthModule {}
