@@ -8,27 +8,29 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CryptoModule } from './crypto/crypto.module';
 import { BrokerModule } from './broker/broker.module';
+import { TransactionsModule } from './transactions/transactions.module';
 
 @Module({
   imports: [
     AuthModule,
     UsersModule,
+    TransactionsModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
-      imports:      [ConfigModule],
-      inject:       [ConfigService],
+      imports: [ConfigModule],
+      inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        type:        'postgres',
-        url:         config.get<string>('DATABASE_URL'),
-        entities:    [join(__dirname, '..', '**', '*.entity.js')],
+        type: 'postgres',
+        url: config.get<string>('DATABASE_URL'),
+        entities: [join(__dirname, '..', '**', '*.entity.js')],
         synchronize: config.get<boolean>('DB_SYNC', true),
       }),
     }),
     CryptoModule,
     BrokerModule,
-  ], // TypeOrmModule.forFeature([User]),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
