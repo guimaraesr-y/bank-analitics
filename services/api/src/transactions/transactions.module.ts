@@ -1,12 +1,16 @@
 import { Module } from '@nestjs/common';
-import { TransactionsController } from './interface/controllers/transactions.controller';
 import { AuthModule } from 'src/auth/auth.module';
-import { TransactionRepositoryImpl } from './infra/repositories/transaction.repository';
 import { CryptoModule } from 'src/crypto/crypto.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TransactionEntity } from './infra/entities/transaction.entity';
-import { TransactionServiceImpl } from './infra/services/transaction.service';
 import { UsersModule } from 'src/users/users.module';
+import { TransactionEntity } from './infra/entities/transaction.entity';
+
+import { TransactionsController } from './interface/controllers/transactions.controller';
+import { TransactionServiceImpl } from './infra/services/transaction.service';
+import { TransactionRepositoryImpl } from './infra/repositories/transaction.repository';
+import { BulkTransactionServiceImpl } from './infra/services/bulk-transaction.service';
+import { BulkTransactionRepositoryImpl } from './infra/repositories/bulk-transaction.repository';
+import { TransactionOperationsController } from './interface/controllers/operations.controller';
 
 @Module({
   imports: [
@@ -15,7 +19,10 @@ import { UsersModule } from 'src/users/users.module';
     UsersModule,
     TypeOrmModule.forFeature([TransactionEntity]),
   ],
-  controllers: [TransactionsController],
+  controllers: [
+    TransactionsController,
+    TransactionOperationsController,
+  ],
   providers: [
     {
       provide: 'TransactionRepository',
@@ -24,7 +31,15 @@ import { UsersModule } from 'src/users/users.module';
     {
       provide: 'TransactionService',
       useClass: TransactionServiceImpl,
-    }
+    },
+    {
+      provide: 'BulkTransactionService',
+      useClass: BulkTransactionServiceImpl,
+    },
+    {
+      provide: 'BulkTransactionRepository',
+      useClass: BulkTransactionRepositoryImpl,
+    },
   ],
 })
 export class TransactionsModule {}
