@@ -11,17 +11,24 @@ import { TransactionRepositoryImpl } from './infra/repositories/transaction.repo
 import { BulkTransactionServiceImpl } from './infra/services/bulk-transaction.service';
 import { BulkTransactionRepositoryImpl } from './infra/repositories/bulk-transaction.repository';
 import { TransactionOperationsController } from './interface/controllers/operations.controller';
+import { BrokerModule } from 'src/broker/broker.module';
+import { FileUploaderModule } from 'src/utils/file-uploader/file-uploader.module';
+import { ImportTransactionsController } from './interface/controllers/import-transactions.controller';
+import { ImportTransactionsServiceImpl } from './infra/services/import-transactions.service';
 
 @Module({
   imports: [
+    BrokerModule,
     AuthModule,
     CryptoModule,
     UsersModule,
+    FileUploaderModule,
     TypeOrmModule.forFeature([TransactionEntity]),
   ],
   controllers: [
     TransactionsController,
     TransactionOperationsController,
+    ImportTransactionsController,
   ],
   providers: [
     {
@@ -40,6 +47,10 @@ import { TransactionOperationsController } from './interface/controllers/operati
       provide: 'BulkTransactionRepository',
       useClass: BulkTransactionRepositoryImpl,
     },
+    {
+      provide: 'ImportTransactionsService',
+      useClass: ImportTransactionsServiceImpl,
+    }
   ],
 })
 export class TransactionsModule {}

@@ -8,6 +8,6 @@ import { RabbitMQBrokerImpl } from './infra/adapters/rabbitmq-broker.adapter';
       useClass: RabbitMQBrokerImpl,
     },
   ],
-  exports: ['SenderBroker'],
+  exports: ['SenderBrokerService'],
 })
 export class BrokerModule {}
