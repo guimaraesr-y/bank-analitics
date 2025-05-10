@@ -8,11 +8,13 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class LocalFileUploader implements FileUploader {
   
+  private baseUrl: string;
   private fileUploadDir: string;
 
   constructor(
     private configService: ConfigService,
   ) {
+    this.baseUrl = this.configService.get('BASE_URL') || 'http://localhost:3000';
     this.fileUploadDir = this.configService.get('PRIVATE_FILE_UPLOAD_DIR') || './private-uploads';
   }
 
@@ -30,7 +32,12 @@ export class LocalFileUploader implements FileUploader {
 
     const filePath = join(this.fileUploadDir, newName);
     await writeFile(filePath, file.buffer);
-    return filePath;
+
+    const relativeUrlPath = filePath
+      .replace(/^[.\\/]+/, '')
+      .replace(/\\/g, '/');
+
+    return this.baseUrl + relativeUrlPath;
   }
 
 }

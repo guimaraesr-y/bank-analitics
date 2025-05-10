@@ -5,7 +5,7 @@ import { HttpFileReader } from './infra/adapters/http-file-reader.adapter';
   providers: [
     {
       provide: 'FileDownloaderInterface',
-      useValue: HttpFileReader
+      useClass: HttpFileReader,
     }
   ],
   exports: [

@@ -2,7 +2,8 @@ import { Injectable, OnModuleInit, Logger, Inject } from '@nestjs/common';
 import { BrokerInterface } from 'src/broker/domain/services/broker.service';
 import { FileDownloaderInterface } from 'src/file-downloader/domain/services/file-downloader.service';
 import { QUEUE_NAME } from 'src/statement-parser/constants';
-import { FileParserInterface } from 'src/statement-parser/domain/services/parser.service';
+import { StatementBrokerMessage } from 'src/statement-parser/domain/entity/statement-broker-message';
+import { BankServiceFactory } from 'src/statement-parser/domain/factories/bank-service.factory';
 
 @Injectable()
 export class ParserService implements OnModuleInit {
@@ -15,31 +16,36 @@ export class ParserService implements OnModuleInit {
     private broker: BrokerInterface,
 
     @Inject('FileDownloaderInterface')
-    private fileReader: FileDownloaderInterface,
+    private fileDownloader: FileDownloaderInterface,
 
-    @Inject('FileParserInterface')
-    private fileParser: FileParserInterface<Record<string, any>>,
+    private bankServiceFactory: BankServiceFactory,
   ) { }
 
   async onModuleInit() {
     await this.broker.connect();
 
     this.logger.log(`Listening on queue ${this.queue}`);
+    await this.broker.consume(this.queue, this.handleMessage.bind(this));
+  }
 
-    await this.broker.consume(this.queue, async (content) => {
-      const { filePath, headers, metadata } = JSON.parse(content.toString());
+  private async handleMessage(content: Buffer) {
+    const message = JSON.parse(content.toString()) as StatementBrokerMessage;
+    const { userId, bank, fileUrl, fileType } = message;
 
-      this.logger.log(`Processing file: ${filePath}`);
-      const buffer = await this.fileReader.read(filePath, headers);
+    this.logger.log(`Processing file at: ${fileUrl}`);
+    const file = await this.fileDownloader.read(fileUrl);
 
-      const records = await this.fileParser.parse(buffer);
-      this.logger.log(`Parsed ${records.length} records`, JSON.stringify(metadata));
+    const bankService = this.bankServiceFactory.create(bank);
+    const records = await bankService.parse(file, fileType);
 
-      // TODO: Implement business logic to process records
-      // ...
+    this.logger.log(`Parsed ${records.length} records`, JSON.stringify({
+      userId, bank, fileUrl, fileType
+    }));
 
-      this.logger.log(`Finished processing file: ${filePath}`);
-    });
+    // TODO: Persist records
+    // ...
+
+    this.logger.log(`Finished processing file: ${fileUrl}`);
   }
 
 }

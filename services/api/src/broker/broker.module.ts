@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { RabbitMQBroker } from './infra/adapters/rabbitmq-broker.adapter';
+import { RabbitMQBrokerImpl } from './infra/adapters/rabbitmq-broker.adapter';
 
 @Module({
   providers: [
     {
-      provide: 'SenderBrokerInterface',
-      useClass: RabbitMQBroker,
+      provide: 'SenderBrokerService',
+      useClass: RabbitMQBrokerImpl,
     },
   ],
-  exports: ['SenderBrokerInterface'],
+  exports: ['SenderBrokerService'],
 })
 export class BrokerModule {}

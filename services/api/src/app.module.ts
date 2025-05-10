@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CryptoModule } from './crypto/crypto.module';
 import { BrokerModule } from './broker/broker.module';
 import { TransactionsModule } from './transactions/transactions.module';
+import { UploadsModule } from './uploads/uploads.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { TransactionsModule } from './transactions/transactions.module';
     }),
     CryptoModule,
     BrokerModule,
+    UploadsModule,
   ],
 })
 export class AppModule {}

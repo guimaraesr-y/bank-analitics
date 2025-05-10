@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { connect, Channel } from 'amqplib';
-import { SenderBrokerInterface } from 'src/broker/domain/services/sender-broker.service';
+import { SenderBrokerService } from 'src/broker/domain/services/sender-broker.service';
 
 @Injectable()
-export class RabbitMQBroker implements SenderBrokerInterface {
+export class RabbitMQBrokerImpl implements SenderBrokerService {
 
   private channel: Channel;
   private connectionUrl: string;
