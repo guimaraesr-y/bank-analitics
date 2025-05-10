@@ -31,6 +31,7 @@ export class RabbitMQBroker implements BrokerInterface {
         await onMessage(msg.content);
         this.ack(msg);
       } catch (err) {
+        console.error(err);
         this.nack(msg, false);
       }
     });

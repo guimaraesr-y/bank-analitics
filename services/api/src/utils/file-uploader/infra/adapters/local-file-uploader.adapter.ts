@@ -32,7 +32,12 @@ export class LocalFileUploader implements FileUploader {
 
     const filePath = join(this.fileUploadDir, newName);
     await writeFile(filePath, file.buffer);
-    return this.baseUrl + filePath;
+
+    const relativeUrlPath = filePath
+      .replace(/^[.\\/]+/, '')
+      .replace(/\\/g, '/');
+
+    return this.baseUrl + relativeUrlPath;
   }
 
 }
