@@ -21,9 +21,18 @@ export class ImportTransactionsServiceImpl implements ImportTransactionsService 
     bank: BankEnum,
     file: Express.Multer.File,
   ): Promise<void> {
-    const fileUrl = await this.fileUploader.upload(file);
+    const { 
+      fileUrl,
+      extension: fileType
+    } = await this.fileUploader.upload(file);
 
-    const message = this.getBrokerMessageBuffer({ userId, bank, fileUrl });
+    // TODO: send file type too
+    const message = this.getBrokerMessageBuffer({ 
+      userId, 
+      bank,
+      fileUrl,
+      fileType,
+    });
     await this.senderBroker.send('statements', message);
   }
 
