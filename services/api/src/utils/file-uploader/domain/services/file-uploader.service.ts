@@ -1,5 +1,7 @@
+import { UploadedFile } from "../entities/uploaded-file";
+
 export interface FileUploader {
 
-  upload(file: Express.Multer.File): Promise<string>;
+  upload(file: Express.Multer.File): Promise<UploadedFile>;
 
 }

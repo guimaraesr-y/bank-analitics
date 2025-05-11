@@ -5,4 +5,5 @@ export interface TransactionBrokerMessage {
   userId: User['id'];
   bank: BankEnum;
   fileUrl: string;
+  fileType: string;
 }
