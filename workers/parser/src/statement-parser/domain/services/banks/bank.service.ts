@@ -3,6 +3,6 @@ import { StatementRecord } from "../../entity/statement-record";
 
 export interface BankService {
 
-  parse(file: Buffer, fileType: StatementType): Promise<Array<StatementRecord>>;
+  parse(file: Buffer, fileType: StatementType, userId: string): Promise<Array<StatementRecord>>;
 
 }
