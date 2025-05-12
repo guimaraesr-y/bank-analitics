@@ -1,6 +1,7 @@
 import { Injectable, OnModuleInit, Logger, Inject } from '@nestjs/common';
 import { BrokerInterface } from 'src/broker/domain/services/broker.service';
 import { FileDownloaderInterface } from 'src/file-downloader/domain/services/file-downloader.service';
+import { PersistEntriesService } from 'src/record-persistence/domain/services/persist-entries.service';
 import { QUEUE_NAME } from 'src/statement-parser/constants';
 import { StatementBrokerMessage } from 'src/statement-parser/domain/entity/statement-broker-message';
 import { BankServiceFactory } from 'src/statement-parser/domain/factories/bank-service.factory';
@@ -17,6 +18,9 @@ export class ParserService implements OnModuleInit {
 
     @Inject('FileDownloaderInterface')
     private fileDownloader: FileDownloaderInterface,
+
+    @Inject('PersistEntriesService')
+    private persistEntriesService: PersistEntriesService,
 
     private bankServiceFactory: BankServiceFactory,
   ) { }
@@ -36,14 +40,13 @@ export class ParserService implements OnModuleInit {
     const file = await this.fileDownloader.read(fileUrl);
 
     const bankService = this.bankServiceFactory.create(bank);
-    const records = await bankService.parse(file, fileType);
+    const records = await bankService.parse(file, fileType, userId);
 
     this.logger.log(`Parsed ${records.length} records`, JSON.stringify({
       userId, bank, fileUrl, fileType
     }));
 
-    // TODO: Persist records
-    // ...
+    await this.persistEntriesService.persistEntries(records);
 
     this.logger.log(`Finished processing file: ${fileUrl}`);
   }

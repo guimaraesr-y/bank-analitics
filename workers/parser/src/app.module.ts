@@ -3,6 +3,7 @@ import { StatementParserModule } from './statement-parser/statement-parser.modul
 import { BrokerModule } from './broker/broker.module';
 import { FileDownloaderModule } from './file-downloader/file-downloader.module';
 import { ConfigModule } from '@nestjs/config';
+import { RecordPersistenceModule } from './record-persistence/record-persistence.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { ConfigModule } from '@nestjs/config';
     BrokerModule,
     FileDownloaderModule,
     StatementParserModule,
+    RecordPersistenceModule,
   ],
 })
 export class AppModule {}
