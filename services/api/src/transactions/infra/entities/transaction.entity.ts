@@ -18,6 +18,9 @@ export class TransactionEntity extends TimestampedEntity implements Transaction 
   @Column()
   to: string; // establishment; TODO: add establishment entity
 
+  @Column('timestamp', { nullable: false })
+  date: Date;
+
   @Column('varchar', { nullable: true, length: 255 })
   description: string;
 
