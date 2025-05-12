@@ -4,4 +4,5 @@ export class StatementRecord {
   description: string;
   amount: number;
   to: string;
+  user: { id: string };
 }
