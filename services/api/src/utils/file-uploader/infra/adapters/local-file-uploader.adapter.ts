@@ -38,7 +38,7 @@ export class LocalFileUploader implements FileUploader {
       .replace(/^[.\\/]+/, '')
       .replace(/\\/g, '/');
 
-    const fileUrl = this.baseUrl + relativeUrlPath;
+    const fileUrl = this.baseUrl + '/' + relativeUrlPath;
 
     return {
       fileUrl,
