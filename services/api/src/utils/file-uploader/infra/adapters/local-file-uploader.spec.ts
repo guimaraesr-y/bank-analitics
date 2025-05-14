@@ -8,6 +8,9 @@ describe('LocalFileUploader', () => {
   let service: LocalFileUploader;
   let configService: ConfigService;
 
+  const private_file_upload_dir = './private-uploads-test';
+  const baseUrl = 'http://test';
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -16,8 +19,13 @@ describe('LocalFileUploader', () => {
           provide: ConfigService,
           useValue: {
             get: (key: string) => {
-              if (key === 'PRIVATE_FILE_UPLOAD_DIR') {
-                return './private-uploads-test';
+              switch (key) {
+                case 'PRIVATE_FILE_UPLOAD_DIR':
+                  return private_file_upload_dir;
+                case 'BASE_URL':
+                  return baseUrl;
+                default:
+                  break;
               }
               return null;
             },
@@ -49,10 +57,7 @@ describe('LocalFileUploader', () => {
 
     const uploadedFile = await service.upload(file);
 
-    expect(fs.existsSync(uploadedFile)).toBe(true);
-    expect(uploadedFile).toContain(
-      configService.get('PRIVATE_FILE_UPLOAD_DIR').replace('./', '')
-    );
-    expect(uploadedFile).toContain('.txt');
+    expect(uploadedFile.fileUrl).toContain(baseUrl + '/private-uploads-test/');
+    expect(uploadedFile.extension).toBe('txt');
   });
 });

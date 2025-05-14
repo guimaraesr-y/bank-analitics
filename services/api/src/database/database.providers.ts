@@ -9,7 +9,7 @@ export const databaseProviders = [
         type: 'mysql',
         url: config.get('DATABASE_URL'),
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-        synchronize: true,
+        synchronize: config.get<boolean>('DB_SYNC', false),
       });
       return dataSource.initialize();
     },
